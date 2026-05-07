@@ -18,3 +18,13 @@ ASP.NET Core MVC web application for managing projects and tasks.
 - Task management
 - Improved UI
 - Project status system
+
+## Design Concepts: Entity-Relationship Model, Relational Schema
+
+![Diagramm](diagramm.jpg)
+
+---
+
+## Hinweis
+
+Dieses Projekt wurde als Lernprojekt im Rahmen einer praxisnahen Aufgabenstellung erstellt.
