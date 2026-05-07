@@ -1,0 +1,10 @@
+﻿@using Projektverwaltung.Models
+@model LoginViewModel
+
+<form method="post">
+    <div asp-validation-summary="All"></div>
+
+    <input asp-for="Login" placeholder="Username or Email" />
+    <input asp-for="Password" type="password" placeholder="Password" />
+    <button type="submit">Login</button>
+</form>

@@ -1,0 +1,11 @@
+﻿@using Projektverwaltung.Models
+@model RegisterViewModel
+
+<form method="post">
+    <div asp-validation-summary="All"></div>
+
+    <input asp-for="UserName" placeholder="Username" />
+    <input asp-for="Email" placeholder="Email" />
+    <input asp-for="Password" type="password" placeholder="Password" />
+    <button type="submit">Register</button>
+</form>
