@@ -21,7 +21,7 @@ ASP.NET Core MVC web application for managing projects and tasks.
 
 ## Design Concepts: Entity-Relationship Model, Relational Schema
 
-![Diagramm](diagramm.jpg)
+![Diagram](diagram.jpg)
 
 ---
 
