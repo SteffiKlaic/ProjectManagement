@@ -12,11 +12,12 @@ ASP.NET Core MVC web application for managing projects and tasks.
 - User registration and login
 - Authentication with ASP.NET Identity
 - User-specific projects
+- Project-specific tasks
 - CRUD operations for projects
 
 ## Planned Features
-- Task management
 - Improved UI
+- CRUD operations for Tasks
 - Project status system
 
 ## Design Concepts: Entity-Relationship Diagram, Relational Diagram
