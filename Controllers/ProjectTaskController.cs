@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Projektverwaltung.Data;
 using Projektverwaltung.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Projektverwaltung.Controllers
 {
@@ -20,9 +21,14 @@ namespace Projektverwaltung.Controllers
         }
 
         // GET: ProjectTask
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int projectId)
         {
-            var projektverwaltungContext = _context.ProjectTask.Include(p => p.Project);
+            ViewBag.projectId = projectId;
+
+            var projektverwaltungContext = _context.ProjectTask
+                .Include(p => p.Project)
+                .Where(p => p.ProjectId == projectId);
+
             return View(await projektverwaltungContext.ToListAsync());
         }
 
@@ -46,10 +52,10 @@ namespace Projektverwaltung.Controllers
         }
 
         // GET: ProjectTask/Create
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            ViewData["ProjectId"] = new SelectList(_context.Project, "ProjectId", "ProjectName");
-            return View();
+            var model = new ProjectTask { ProjectId = id };
+            return View(model);
         }
 
         // POST: ProjectTask/Create
@@ -57,15 +63,16 @@ namespace Projektverwaltung.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectTaskId,Title,Description,CurrentStatus,CreatedOn,ProjectId")] ProjectTask projectTask)
+        public async Task<IActionResult> Create([Bind("Title,Description,CurrentStatus, ProjectId")] ProjectTask projectTask)
         {
             if (ModelState.IsValid)
             {
+
                 _context.Add(projectTask);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new { projectId = projectTask.ProjectId });
             }
-            ViewData["ProjectId"] = new SelectList(_context.Project, "ProjectId", "ProjectName", projectTask.ProjectId);
+
             return View(projectTask);
         }
 

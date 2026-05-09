@@ -13,20 +13,22 @@ namespace Projektverwaltung.Models
         public enum Status
         {
             Open,
-            InProgress,
+            [Display(Name = "In Progress")] InProgress,
             Done
         }
         [Required]
+        [Display(Name = "Current Status")]
         public Status CurrentStatus { get; set; }
 
 
         [Required]
-        public DateTime CreatedOn { get; set; }
+        [Display(Name = "Created On")]
+        public DateTime CreatedOn { get; set; } = DateTime.Now;
 
         // FK
-        [Required]
-        public int ProjectId { get; set; }
+     
+        public int? ProjectId { get; set; }
         // Navigation
-        public Project Project { get; set; }
+        public Project? Project { get; set; }
     }
 }
