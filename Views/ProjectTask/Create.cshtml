@@ -33,7 +33,7 @@
                 <input type="hidden" asp-for="ProjectId" />
             </div>
             <div class="mt-2">
-                <div class="form-group">
+                <div class="form-group" class="mt-2">
                     <input type="submit" value="Create" class="btn btn-primary" />
                 </div>
             </div>
@@ -43,7 +43,7 @@
 
 <div>
     <div class="mt-2">
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index" asp-route-projectId="@Model.ProjectId" class="btn btn-outline-secondary">Back to Tasks</a>
     </div>
 </div>
 

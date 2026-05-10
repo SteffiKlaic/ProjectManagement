@@ -89,7 +89,7 @@ namespace Projektverwaltung.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProjectId"] = new SelectList(_context.Project, "ProjectId", "ProjectName", projectTask.ProjectId);
+        
             return View(projectTask);
         }
 
@@ -98,7 +98,7 @@ namespace Projektverwaltung.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectTaskId,Title,Description,CurrentStatus,CreatedOn,ProjectId")] ProjectTask projectTask)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectTaskId,Title,Description,CurrentStatus,ProjectId")] ProjectTask projectTask)
         {
             if (id != projectTask.ProjectTaskId)
             {
@@ -123,9 +123,8 @@ namespace Projektverwaltung.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new {projectId = projectTask.ProjectId});
             }
-            ViewData["ProjectId"] = new SelectList(_context.Project, "ProjectId", "ProjectName", projectTask.ProjectId);
             return View(projectTask);
         }
 
