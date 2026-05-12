@@ -18,6 +18,17 @@ namespace Projektverwaltung.Models
 
         public bool IsDeleted { get; set; }
 
+        public enum Status
+        {
+            Planned,
+            Active,
+            Completed
+        }
+        [Required]
+        [Display(Name = "Current Status")]
+        public Status CurrentStatus { get; set; }
+
+
         // FK 
 
         public string? UserId { get; set; }

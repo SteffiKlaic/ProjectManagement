@@ -44,7 +44,7 @@
                     @Html.DisplayFor(modelItem => item.CurrentStatus)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedOn)
+                    @item.CreatedOn.ToString("dd.MM.yyyy")
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Project.ProjectName)

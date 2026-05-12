@@ -18,7 +18,7 @@ namespace Projektverwaltung.Models
         }
         [Required]
         [Display(Name = "Current Status")]
-        public Status CurrentStatus { get; set; }
+        public Status CurrentStatus { get; set; }   
 
 
         [Required]

@@ -63,7 +63,7 @@ namespace Projektverwaltung.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectName,Description")] Project project)
+        public async Task<IActionResult> Create([Bind("ProjectName,Description, CurrentStatus")] Project project)
         {
             if (ModelState.IsValid)
             {
@@ -98,7 +98,7 @@ namespace Projektverwaltung.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,ProjectName,Description")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectId,ProjectName,Description, CurrentStatus")] Project project)
         {
             if (id != project.ProjectId)
             {
@@ -119,6 +119,7 @@ namespace Projektverwaltung.Controllers
                 {
                     existingProject.ProjectName = project.ProjectName;
                     existingProject.Description = project.Description;
+                    existingProject.CurrentStatus = project.CurrentStatus;
 
                     await _context.SaveChangesAsync();
                 }

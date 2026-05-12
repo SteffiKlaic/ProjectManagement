@@ -75,7 +75,7 @@ namespace Projektverwaltung.Controllers
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, false, false);
 
             if (result.Succeeded)
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Project");
 
 
             ModelState.AddModelError("", "Login failed");
