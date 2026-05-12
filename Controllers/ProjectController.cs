@@ -28,7 +28,7 @@ namespace Projektverwaltung.Controllers
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var userProjects = await _context.Project
-                .Where(p => p.UserId == currentUser)
+                .Where(p => p.UserId == currentUser && !p.IsDeleted)
                 .ToListAsync();
 
             return View(userProjects);
@@ -43,7 +43,7 @@ namespace Projektverwaltung.Controllers
             }
 
             var project = await _context.Project
-                .FirstOrDefaultAsync(m => m.ProjectId == id);
+                .FirstOrDefaultAsync(m => m.ProjectId == id && !m.IsDeleted);
             if (project == null)
             {
                 return NotFound();
@@ -85,7 +85,7 @@ namespace Projektverwaltung.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Project.FindAsync(id);
+            var project = await _context.Project.FirstOrDefaultAsync(p => p.ProjectId == id && !p.IsDeleted);
             if (project == null)
             {
                 return NotFound();
@@ -105,14 +105,21 @@ namespace Projektverwaltung.Controllers
                 return NotFound();
             }
 
+            var existingProject = await _context.Project.FirstOrDefaultAsync(p => p.ProjectId == id && !p.IsDeleted);
+
+            if (existingProject == null)
+            {
+                return NotFound();
+            }
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                    project.UserId = currentUser;
+                    existingProject.ProjectName = project.ProjectName;
+                    existingProject.Description = project.Description;
 
-                    _context.Update(project);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -140,7 +147,7 @@ namespace Projektverwaltung.Controllers
             }
 
             var project = await _context.Project
-                .FirstOrDefaultAsync(m => m.ProjectId == id);
+                .FirstOrDefaultAsync(m => m.ProjectId == id && !m.IsDeleted);
             if (project == null)
             {
                 return NotFound();
@@ -154,10 +161,18 @@ namespace Projektverwaltung.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var project = await _context.Project.FindAsync(id);
+            var project = await _context.Project
+            .Include(p => p.ProjectTasks)
+            .FirstOrDefaultAsync(p => p.ProjectId == id && !p.IsDeleted);
+            
             if (project != null)
             {
-                _context.Project.Remove(project);
+                project.IsDeleted = true;
+
+                foreach (var task in project.ProjectTasks)
+                {
+                    task.IsDeleted = true;
+                }
             }
 
             await _context.SaveChangesAsync();

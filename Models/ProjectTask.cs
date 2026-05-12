@@ -25,8 +25,10 @@ namespace Projektverwaltung.Models
         [Display(Name = "Created On")]
         public DateTime CreatedOn { get; set; } = DateTime.Now;
 
+        public bool IsDeleted { get; set; }
+
         // FK
-     
+
         public int? ProjectId { get; set; }
         // Navigation
         public Project? Project { get; set; }

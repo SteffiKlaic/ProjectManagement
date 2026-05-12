@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Projektverwaltung.Data;
 using Projektverwaltung.Models;
@@ -27,8 +28,8 @@ namespace Projektverwaltung.Controllers
 
             var projektverwaltungContext = _context.ProjectTask
                 .Include(p => p.Project)
-                .Where(p => p.ProjectId == projectId);
-
+                .Where(p => p.ProjectId == projectId && !p.IsDeleted);
+               
             return View(await projektverwaltungContext.ToListAsync());
         }
 
@@ -42,7 +43,7 @@ namespace Projektverwaltung.Controllers
 
             var projectTask = await _context.ProjectTask
                 .Include(p => p.Project)
-                .FirstOrDefaultAsync(m => m.ProjectTaskId == id);
+                .FirstOrDefaultAsync(m => m.ProjectTaskId == id && !m.IsDeleted);
             if (projectTask == null)
             {
                 return NotFound();
@@ -84,7 +85,7 @@ namespace Projektverwaltung.Controllers
                 return NotFound();
             }
 
-            var projectTask = await _context.ProjectTask.FindAsync(id);
+            var projectTask = await _context.ProjectTask.FirstOrDefaultAsync(p => p.ProjectTaskId == id && !p.IsDeleted);
             if (projectTask == null)
             {
                 return NotFound();
@@ -100,16 +101,28 @@ namespace Projektverwaltung.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ProjectTaskId,Title,Description,CurrentStatus,ProjectId")] ProjectTask projectTask)
         {
+
             if (id != projectTask.ProjectTaskId)
             {
                 return NotFound();
             }
 
+            var existingTask = await _context.ProjectTask.FirstOrDefaultAsync(p => p.ProjectTaskId == id && !p.IsDeleted);
+
+            if (existingTask == null)
+            {
+                return NotFound();
+            }
+
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(projectTask);
+                    existingTask.Title = projectTask.Title;
+                    existingTask.Description = projectTask.Description;
+                    existingTask.CurrentStatus = projectTask.CurrentStatus;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -138,7 +151,7 @@ namespace Projektverwaltung.Controllers
 
             var projectTask = await _context.ProjectTask
                 .Include(p => p.Project)
-                .FirstOrDefaultAsync(m => m.ProjectTaskId == id);
+                .FirstOrDefaultAsync(m => m.ProjectTaskId == id && !m.IsDeleted);
             if (projectTask == null)
             {
                 return NotFound();
@@ -152,14 +165,21 @@ namespace Projektverwaltung.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var projectTask = await _context.ProjectTask.FindAsync(id);
+            var projectTask = await _context.ProjectTask.FirstOrDefaultAsync(p => p.ProjectTaskId == id && !p.IsDeleted);
+
             if (projectTask != null)
             {
-                _context.ProjectTask.Remove(projectTask);
+                projectTask.IsDeleted = true;
+               
+            }
+            
+            else
+            {
+                return NotFound();
             }
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new {projectId = projectTask.ProjectId});
         }
 
         private bool ProjectTaskExists(int id)

@@ -15,6 +15,8 @@
                 Organize projects, track tasks and monitor progress with a clean ASP.NET MVC application.
             </p>
 
+            @if (User.Identity.IsAuthenticated)
+            {
             <div class="mt-4">
                 <a asp-controller="Project"
                        asp-action="Index"
@@ -22,6 +24,17 @@
                     View Projects
                 </a>
             </div>
+            }
+            else
+            {
+                <div class="mt-4">
+                    <a asp-controller="Auth"
+                           asp-action="Login"
+                           class="btn btn-primary btn-lg">
+                        Login
+                    </a>
+                </div>
+            }
         </div>
 
         <div class="col-md-6 text-center">
