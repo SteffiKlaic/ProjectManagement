@@ -17,10 +17,10 @@ ASP.NET Core MVC web application for managing projects and tasks.
 - CRUD operations for Tasks
 - Project and task status system
 - Soft delete functionality
+- Project and task filtering
 
 ## Planned Features
 - Improved UI
-- Project and task filtering
 
 ## Design Concepts: Entity-Relationship Diagram, Relational Diagram
 
