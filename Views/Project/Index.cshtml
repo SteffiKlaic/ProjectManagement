@@ -9,6 +9,25 @@
 <p>
     <a asp-action="Create" class="btn btn-success">Create New Project</a>
 </p>
+
+<form asp-action="ByProject" method="get" class="mb-3" style="max-width:420px;">
+    <div class="input-group">
+
+        <input name="searchTerm" value="@ViewBag.FilterProject" class="form-control" placeholder="Filter by projects" />
+
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+</form>
+
+@if (ViewBag.FilterProject != null)
+{
+    <div class="alert alert-info">
+        Gefiltert nach: <strong>@ViewBag.FilterProject</strong>
+
+        <a asp-action="Index" class="ms-2">Remove filter</a>
+    </div>
+}
+
 <table class="table">
     <thead>
         <tr>

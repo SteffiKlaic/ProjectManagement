@@ -180,6 +180,31 @@ namespace Projektverwaltung.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ByProject(string searchTerm)
+        {
+          
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return RedirectToAction(nameof(Index));
+
+          
+            searchTerm = searchTerm.Trim();
+
+         
+            var projects = await _context.Project
+                .Include(p => p.ProjectTasks)
+                .Where(p => p.ProjectName.Contains(searchTerm) || p.Description.Contains(searchTerm))
+                .Where(p => !p.IsDeleted)
+                .OrderByDescending(c => c.CreatedOn)
+                .ToListAsync();
+
+         
+            ViewBag.FilterProject = searchTerm;
+
+     
+            return View("Index", projects);
+        }
+
         private bool ProjectExists(int id)
         {
             return _context.Project.Any(e => e.ProjectId == id);

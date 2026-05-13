@@ -182,6 +182,33 @@ namespace Projektverwaltung.Controllers
             return RedirectToAction(nameof(Index), new {projectId = projectTask.ProjectId});
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ByTask(string searchTerm, int projectId, ProjectTask projectTask)
+        {
+
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return RedirectToAction(nameof(Index), new { projectId = projectTask.ProjectId });
+
+
+            searchTerm = searchTerm.Trim();
+
+
+            var tasks = await _context.ProjectTask
+                .Include(p => p.Project)
+                .Where(p => p.Title.Contains(searchTerm) || p.Description.Contains(searchTerm))
+                .Where(p => !p.IsDeleted)
+                .Where(p => p.ProjectId == projectId)
+                .OrderByDescending(c => c.CreatedOn)
+                .ToListAsync();
+
+
+            ViewBag.FilterTask = searchTerm;
+            @ViewBag.projectId = projectId;
+
+
+            return View("Index", tasks);
+        }
+
         private bool ProjectTaskExists(int id)
         {
             return _context.ProjectTask.Any(e => e.ProjectTaskId == id);

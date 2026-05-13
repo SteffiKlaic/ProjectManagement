@@ -9,6 +9,27 @@
 <p>
     <a asp-action="Create" asp-route-id="@ViewBag.projectId" class="btn btn-success">Create New Task</a>
 </p>
+
+<form asp-action="ByTask" method="get" class="mb-3" style="max-width:420px;">
+    <div class="input-group">
+        
+        <input type="hidden" name="projectId" value="@ViewBag.projectId" />
+        
+        <input name="searchTerm" value="@ViewBag.FilterTask" class="form-control" placeholder="Filter by tasks" />
+
+        <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+</form>
+
+@if (ViewBag.FilterTask != null)
+{
+    <div class="alert alert-info">
+        Gefiltert nach: <strong>@ViewBag.FilterTask</strong>
+
+        <a asp-action="Index" asp-route-projectId="@ViewBag.projectId" class="ms-2">Remove filter</a>
+    </div>
+}
+
 <table class="table">
     <thead>
         <tr>
