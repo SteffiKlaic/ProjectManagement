@@ -10,23 +10,42 @@
     <a asp-action="Create" class="btn btn-success">Create New Project</a>
 </p>
 
-<form asp-action="ByProject" method="get" class="mb-3" style="max-width:420px;">
+
+<form method="get" form asp-action="Index" class="mb-3" style="max-width:420px;">
+   
     <div class="input-group">
 
         <input name="searchTerm" value="@ViewBag.FilterProject" class="form-control" placeholder="Filter by projects" />
 
-        <button class="btn btn-outline-secondary" type="submit">Search</button>
     </div>
+
+
+        <select name="status" class="form-select" value="@ViewBag.Status">
+
+            <option value="" disabled hidden selected="@(ViewBag.Status == null)">Filter by project status</option>
+
+         
+            <option value="" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() == "")">All</option>
+            <option value="Planned" selected="@(ViewBag.Status?.ToString() == "Planned")">Planned</option>
+            <option value="Active" selected="@(ViewBag.Status?.ToString() == "Active")">Active</option>
+            <option value="Completed" selected="@(ViewBag.Status?.ToString() == "Completed")">Completed</option>
+
+        </select>
+
+        <button type="submit" class="btn btn-outline-secondary">
+            Filter
+        </button>
+    @if (ViewBag.FilterProject != null)
+    {
+        <div class="alert alert-info">
+            Gefiltert nach: <strong>@ViewBag.FilterProject</strong>
+
+            <a asp-action="Index" class="ms-2">Remove filter</a>
+        </div>
+    }
 </form>
 
-@if (ViewBag.FilterProject != null)
-{
-    <div class="alert alert-info">
-        Gefiltert nach: <strong>@ViewBag.FilterProject</strong>
 
-        <a asp-action="Index" class="ms-2">Remove filter</a>
-    </div>
-}
 
 <table class="table">
     <thead>
@@ -69,10 +88,10 @@
                         <a asp-action="Details" class="btn btn-info" asp-route-id="@item.ProjectId">Details</a>
                         <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.ProjectId">Delete</a>
                         <a asp-controller="ProjectTask"
-                               asp-action="Index"
-                               asp-route-projectId="@item.ProjectId"
-                               class="btn btn-secondary">
-                               Tasks
+                           asp-action="Index"
+                           asp-route-projectId="@item.ProjectId"
+                           class="btn btn-secondary">
+                            Tasks
                         </a>
                     </div>
                 </td>
