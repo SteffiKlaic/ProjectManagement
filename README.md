@@ -24,4 +24,3 @@ ASP.NET Core MVC web application for managing projects and tasks.
 
 ![Diagram](diagram.jpg)
 
----
