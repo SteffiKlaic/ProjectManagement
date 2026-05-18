@@ -25,7 +25,3 @@ ASP.NET Core MVC web application for managing projects and tasks.
 ![Diagram](diagram.jpg)
 
 ---
-
-##
-
-This project was created as a learning project based on a practical real-world assignment.
