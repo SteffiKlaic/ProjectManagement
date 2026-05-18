@@ -4,31 +4,53 @@
     ViewData["Title"] = "Index";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
 <h1>Tasks</h1>
 
 <p>
     <a asp-action="Create" asp-route-id="@ViewBag.projectId" class="btn btn-success">Create New Task</a>
 </p>
 
-<form asp-action="ByTask" method="get" class="mb-3" style="max-width:420px;">
+<form asp-action="Index" method="get" class="mb-3" style="max-width:420px;">
     <div class="input-group">
         
         <input type="hidden" name="projectId" value="@ViewBag.projectId" />
         
         <input name="searchTerm" value="@ViewBag.FilterTask" class="form-control" placeholder="Filter by tasks" />
 
-        <button class="btn btn-outline-secondary" type="submit">Search</button>
     </div>
-</form>
+
+    <select name="status" class="form-select" value="@ViewBag.Status">
+
+        <option value="" disabled hidden selected="@(ViewBag.Status == null)">Filter by task status</option>
+
+         
+        <option value="" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() == "")">All</option>
+        <option value="Open" selected="@(ViewBag.Status?.ToString() == "Open")">Open</option>
+        <option value="InProgress" selected="@(ViewBag.Status?.ToString() == "InProgress")">In Progress</option>
+        <option value="Open" selected="@(ViewBag.Status?.ToString() == "Open")">Open</option>
+
+    </select>
+
+    <button type="submit" class="btn btn-outline-secondary">
+        Filter
+    </button>
 
 @if (ViewBag.FilterTask != null)
 {
     <div class="alert alert-info">
         Gefiltert nach: <strong>@ViewBag.FilterTask</strong>
 
-        <a asp-action="Index" asp-route-projectId="@ViewBag.projectId" class="ms-2">Remove filter</a>
+            <a asp-action="Index" asp-route-ProjectTaskId="@ViewBag.projectTaskId" class="ms-2">Remove filter</a>
     </div>
 }
+</form>
 
 <table class="table">
     <thead>
@@ -88,3 +110,4 @@
         <a a asp-controller="Project" asp-action="Index" class="btn btn-outline-secondary">Back to Projects</a>
     </div>
 </div>
+

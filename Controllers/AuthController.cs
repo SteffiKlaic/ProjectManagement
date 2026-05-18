@@ -45,6 +45,7 @@ namespace Projektverwaltung.Controllers
             foreach (var error in result.Errors)
                 ModelState.AddModelError("", error.Description);
 
+            TempData["SuccessMessage"] = "Registered successfully.";
             return View(model);
         }
 

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using static Projektverwaltung.Models.Project;
 
 namespace Projektverwaltung.Controllers
 {
@@ -22,15 +23,32 @@ namespace Projektverwaltung.Controllers
         }
 
         // GET: ProjectTask
-        public async Task<IActionResult> Index(int projectId)
+        public async Task<IActionResult> Index(int projectId, ProjectTask.Status? status, string searchTerm)
         {
             ViewBag.projectId = projectId;
+            ViewBag.Status = status;
+            ViewBag.FilterTask = searchTerm;
 
-            var projektverwaltungContext = _context.ProjectTask
+            var meineAbfrage = _context.ProjectTask
                 .Include(p => p.Project)
                 .Where(p => p.ProjectId == projectId && !p.IsDeleted);
-               
-            return View(await projektverwaltungContext.ToListAsync());
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.Trim();
+
+                meineAbfrage = meineAbfrage.Where(p => p.Title.Contains(searchTerm) || p.Description.Contains(searchTerm));
+            }
+
+
+            if (status != null)
+            {
+                meineAbfrage = meineAbfrage.Where(p => p.CurrentStatus == status);
+            }
+
+            var gefilterteListe = await meineAbfrage.OrderByDescending(c => c.CreatedOn).ToListAsync();
+
+            return View(gefilterteListe);
         }
 
         // GET: ProjectTask/Details/5
@@ -71,6 +89,7 @@ namespace Projektverwaltung.Controllers
 
                 _context.Add(projectTask);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Task created successfully.";
                 return RedirectToAction(nameof(Index), new { projectId = projectTask.ProjectId });
             }
 
@@ -136,8 +155,11 @@ namespace Projektverwaltung.Controllers
                         throw;
                     }
                 }
+
+                TempData["SuccessMessage"] = "Task edited successfully.";
                 return RedirectToAction(nameof(Index), new {projectId = projectTask.ProjectId});
             }
+
             return View(projectTask);
         }
 
@@ -179,35 +201,10 @@ namespace Projektverwaltung.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Task deleted successfully.";
             return RedirectToAction(nameof(Index), new {projectId = projectTask.ProjectId});
         }
 
-        [HttpGet]
-        public async Task<IActionResult> ByTask(string searchTerm, int projectId, ProjectTask projectTask)
-        {
-
-            if (string.IsNullOrWhiteSpace(searchTerm))
-                return RedirectToAction(nameof(Index), new { projectId = projectTask.ProjectId });
-
-
-            searchTerm = searchTerm.Trim();
-
-
-            var tasks = await _context.ProjectTask
-                .Include(p => p.Project)
-                .Where(p => p.Title.Contains(searchTerm) || p.Description.Contains(searchTerm))
-                .Where(p => !p.IsDeleted)
-                .Where(p => p.ProjectId == projectId)
-                .OrderByDescending(c => c.CreatedOn)
-                .ToListAsync();
-
-
-            ViewBag.FilterTask = searchTerm;
-            @ViewBag.projectId = projectId;
-
-
-            return View("Index", tasks);
-        }
 
         private bool ProjectTaskExists(int id)
         {

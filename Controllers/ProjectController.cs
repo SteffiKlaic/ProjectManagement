@@ -25,7 +25,7 @@ namespace Projektverwaltung.Controllers
         }
 
         // GET: Project
-        public async Task<IActionResult> Index(Status? status, string searchTerm)
+        public async Task<IActionResult> Index(Project.Status? status, string searchTerm)
         {
        
             ViewBag.Status = status;
@@ -95,8 +95,10 @@ namespace Projektverwaltung.Controllers
 
                 _context.Add(project);
                 await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Project created successfully.";
                 return RedirectToAction(nameof(Index));
             }
+
             return View(project);
         }
 
@@ -157,8 +159,11 @@ namespace Projektverwaltung.Controllers
                         throw;
                     }
                 }
+
+                TempData["SuccessMessage"] = "Project edited successfully.";
                 return RedirectToAction(nameof(Index));
             }
+
             return View(project);
         }
 
@@ -200,53 +205,9 @@ namespace Projektverwaltung.Controllers
             }
 
             await _context.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Project deleted successfully.";
             return RedirectToAction(nameof(Index));
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> ByProject(string searchTerm)
-        //{
-
-        //    if (string.IsNullOrWhiteSpace(searchTerm))
-        //        return RedirectToAction(nameof(Index));
-
-
-        //    searchTerm = searchTerm.Trim();
-
-
-        //    var projects = await _context.Project
-        //        .Include(p => p.ProjectTasks)
-        //        .Where(p => p.ProjectName.Contains(searchTerm) || p.Description.Contains(searchTerm))
-        //        .Where(p => !p.IsDeleted)
-        //        .OrderByDescending(c => c.CreatedOn)
-        //        .ToListAsync();
-
-
-        //    ViewBag.FilterProject = searchTerm;
-
-
-        //    return View("Index", projects);
-        //}
-
-
-        //[HttpGet]
-        //public async Task<IActionResult> ByStatus(Status? status)
-        //{
-        //   var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        //   var projects = _context.Project
-        //  .Where(p => p.UserId == currentUser && !p.IsDeleted);
-
-        //    if (status.HasValue)
-        //    {
-        //        projects = projects
-        //        .Where(p => p.CurrentStatus == status.Value);
-      
-        //    }
-
-        //    ViewBag.Status = status;
-
-        //    return View("Index", await projects.ToListAsync());
-        //}
 
         private bool ProjectExists(int id)
         {
