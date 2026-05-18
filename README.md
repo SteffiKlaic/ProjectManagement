@@ -19,6 +19,7 @@ ASP.NET Core MVC web application for managing projects and tasks.
 - Soft delete functionality
 - Project and task filtering
   
+  
 ## Design Concepts: Entity-Relationship Diagram, Relational Diagram
 
 ![Diagram](diagram.jpg)
