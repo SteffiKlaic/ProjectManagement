@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Projektverwaltung.Data;
 using Projektverwaltung.Models;
+using Projektverwaltung.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,11 @@ namespace Projektverwaltung.Controllers
     public class ProjectController : Controller
     {
         private readonly ProjektverwaltungContext _context;
-
-        public ProjectController(ProjektverwaltungContext context)
+        private readonly AiService _aiService;
+        public ProjectController(ProjektverwaltungContext context, AiService aiService)
         {
             _context = context;
+            _aiService = aiService;
         }
 
         // GET: Project
@@ -207,6 +209,16 @@ namespace Projektverwaltung.Controllers
             await _context.SaveChangesAsync();
             TempData["SuccessMessage"] = "Project deleted successfully.";
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> GenerateDescription(string title)
+        {
+            var description =
+                await _aiService.GenerateDescription(title);
+
+            return Json(new { description });
+
         }
 
         private bool ProjectExists(int id)

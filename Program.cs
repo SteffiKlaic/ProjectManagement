@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Projektverwaltung.Data;
 using Projektverwaltung.Models;
+using Projektverwaltung.Service;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ProjektverwaltungContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ProjektverwaltungContext") ?? throw new InvalidOperationException("Connection string 'ProjektverwaltungContext' not found.")));
@@ -18,6 +19,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 {
     options.User.RequireUniqueEmail = true;
 });
+
+builder.Services.AddHttpClient<AiService>();
 
 var app = builder.Build();
 

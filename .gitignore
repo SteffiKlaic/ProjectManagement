@@ -5,3 +5,5 @@ obj/
 *.docx
 *.bkp
 *.drawio
+appsettings.*.json
+appsettings.Development.json
