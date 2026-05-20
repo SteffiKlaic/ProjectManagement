@@ -13,101 +13,120 @@
 
 <h1>Tasks</h1>
 
-<p>
-    <a asp-action="Create" asp-route-id="@ViewBag.projectId" class="btn btn-success">Create New Task</a>
-</p>
+<div class="position-relative">
 
-<form asp-action="Index" method="get" class="mb-3" style="max-width:420px;">
-    <div class="input-group">
-        
-        <input type="hidden" name="projectId" value="@ViewBag.projectId" />
-        
-        <input name="searchTerm" value="@ViewBag.FilterTask" class="form-control" placeholder="Filter by tasks" />
+    <img src="~/images/project-management.svg"
+         class="position-absolute opacity-25"
+         style="right:120px; top:0; max-height:300px; z-index:0;" />
 
-    </div>
+    <div style="position:relative; z-index:1;">
 
-    <select name="status" class="form-select" value="@ViewBag.Status">
+        <form asp-action="Index" method="get" class="mb-3" style="max-width:420px;">
+            <div class="input-group">
 
-        <option value="" disabled hidden selected="@(ViewBag.Status == null)">Filter by task status</option>
+                <input type="hidden" name="projectId" value="@ViewBag.projectId" />
+
+                <input name="searchTerm" value="@ViewBag.FilterTask" class="form-control mb-3" placeholder="Filter by tasks" />
+
+            </div>
+
+            <select name="status" class="form-select mb-3" value="@ViewBag.Status">
+
+                <option value="" disabled hidden selected="@(ViewBag.Status == null)">Filter by task status</option>
 
          
-        <option value="" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() == "")">All</option>
-        <option value="Open" selected="@(ViewBag.Status?.ToString() == "Open")">Open</option>
-        <option value="InProgress" selected="@(ViewBag.Status?.ToString() == "InProgress")">In Progress</option>
-        <option value="Open" selected="@(ViewBag.Status?.ToString() == "Open")">Open</option>
+                <option value="" selected="@(ViewBag.Status != null && ViewBag.Status.ToString() == "")">All</option>
+                <option value="Open" selected="@(ViewBag.Status?.ToString() == "Open")">Open</option>
+                <option value="InProgress" selected="@(ViewBag.Status?.ToString() == "InProgress")">In Progress</option>
+                <option value="Open" selected="@(ViewBag.Status?.ToString() == "Open")">Open</option>
 
-    </select>
+            </select>
 
-    <button type="submit" class="btn btn-outline-secondary">
-        Filter
-    </button>
+            <button type="submit" class="btn btn-secondary mb-4">
+                Filter
+            </button>
 
-@if (ViewBag.FilterTask != null)
-{
-    <div class="alert alert-info">
-        Gefiltert nach: <strong>@ViewBag.FilterTask</strong>
+            @if (ViewBag.FilterTask != null)
+            {
+                <div class="d-flex align-items-center gap-2 mb-4">
 
-            <a asp-action="Index" asp-route-ProjectTaskId="@ViewBag.projectTaskId" class="ms-2">Remove filter</a>
-    </div>
-}
-</form>
+                    <span class="text-muted">
+                        Filtered by:
+                    </span>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CurrentStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedOn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Project)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CurrentStatus)
-                </td>
-                <td>
-                    @item.CreatedOn.ToString("dd.MM.yyyy")
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Project.ProjectName)
-                </td>
-                <td>
-                    <div class="d-flex gap-2">
-                        <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.ProjectTaskId">Edit</a>
-                        <a asp-action="Details" class="btn btn-info" asp-route-id="@item.ProjectTaskId">Details</a>
-                        <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.ProjectTaskId">Delete</a>
-                    </div>
-                </td>
-            </tr>
-        }
+                    <span class="badge bg-dark">
+                        @ViewBag.FilterTask
+                    </span>
 
-    </tbody>
-</table>
+                    <a asp-action="Index"
+                       class="btn btn-sm btn-outline-secondary">
+                        Remove Filter
+                    </a>
 
-<div class="mt-2">
-    <div>
-        <a a asp-controller="Project" asp-action="Index" class="btn btn-outline-secondary">Back to Projects</a>
-    </div>
-</div>
+                </div>
+            }
+        </form>
+
+        <p>
+            <a asp-action="Create" asp-route-id="@ViewBag.projectId" class="btn btn-success btn-sm">Create New Task</a>
+        </p>
+
+        <table class="table table-hover align-middle">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CurrentStatus)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedOn)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Project)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CurrentStatus)
+                        </td>
+                        <td>
+                            @item.CreatedOn.ToString("dd.MM.yyyy")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Project.ProjectName)
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <a asp-action="Edit" class="btn btn-outline-warning btn-sm" asp-route-id="@item.ProjectTaskId">Edit</a>
+                                <a asp-action="Details" class="btn btn-outline-primary btn-sm" asp-route-id="@item.ProjectTaskId">Details</a>
+                                <a asp-action="Delete" class="btn btn-outline-danger btn-sm" asp-route-id="@item.ProjectTaskId">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+
+        <div class="mt-2">
+            <div>
+                <a a asp-controller="Project" asp-action="Index" class="btn btn-outline-secondary btn-sm">Back to Projects</a>
+            </div>
+        </div>
 
