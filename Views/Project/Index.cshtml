@@ -42,7 +42,7 @@
 
             </select>
 
-            <button type="submit" class="btn btn-secondary mb-4">
+            <button type="submit" class="btn btn-secondary mb-4 btn-sm">
                 Filter
             </button>
 
@@ -59,7 +59,7 @@
                     </span>
 
                     <a asp-action="Index"
-                       class="btn btn-sm btn-outline-secondary">
+                       class="btn btn-sm btn-outline-secondary btn-sm">
                         Remove Filter
                     </a>
 
@@ -80,7 +80,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Description)
                     </th>
-                    <th>
+                    <th class="text-nowrap">
                         @Html.DisplayNameFor(model => model.CurrentStatus)
                     </th>
                     <th class="text-nowrap">
@@ -97,7 +97,25 @@
                             @Html.DisplayFor(modelItem => item.ProjectName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Description)
+                            @{
+                                var shortDescription =
+                                    item.Description?.Length > 120
+                                    ? item.Description.Substring(0, 120) + "..."
+                                    : item.Description;
+                            }
+
+                            @shortDescription
+
+                            @if (item.Description?.Length > 120)
+                            {
+                                <a asp-action="Details"
+                                   asp-route-id="@item.ProjectId"
+                                   class="ms-1 text-decoration-none">
+
+                                    Read more
+
+                                </a>
+                            }
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.CurrentStatus)
