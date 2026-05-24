@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Projektverwaltung.Data;
 using Projektverwaltung.Models;
+using Projektverwaltung.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +17,12 @@ namespace Projektverwaltung.Controllers
     public class ProjectTaskController : Controller
     {
         private readonly ProjektverwaltungContext _context;
+        private readonly AiService _aiService;
 
-        public ProjectTaskController(ProjektverwaltungContext context)
+        public ProjectTaskController(ProjektverwaltungContext context, AiService aiService)
         {
             _context = context;
+            _aiService = aiService;
         }
 
         // GET: ProjectTask
@@ -205,7 +208,15 @@ namespace Projektverwaltung.Controllers
             return RedirectToAction(nameof(Index), new {projectId = projectTask.ProjectId});
         }
 
+        [HttpPost]
+        public async Task<IActionResult> GenerateDescription(string title)
+        {
+            var description =
+                await _aiService.GenerateDescription(title);
 
+            return Json(new { description });
+
+        }
         private bool ProjectTaskExists(int id)
         {
             return _context.ProjectTask.Any(e => e.ProjectTaskId == id);
