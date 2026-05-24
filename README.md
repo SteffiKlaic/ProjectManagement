@@ -14,12 +14,11 @@ ASP.NET Core MVC web application for managing projects and tasks.
 - Authentication with ASP.NET Identity
 - User-specific projects
 - Project-specific tasks
-- CRUD operations for projects
-- CRUD operations for Tasks
+- CRUD operations for projects and tasks
 - Project and task status system
 - Soft delete functionality
 - Project and task filtering
-- AI-powered project description generation via OpenRouter API
+- AI-powered project and task description generation via OpenRouter API
   
   
 ## Design Concepts: Entity-Relationship Diagram, Relational Diagram
