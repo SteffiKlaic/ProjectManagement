@@ -2,6 +2,8 @@
 
 ASP.NET Core MVC web application for managing projects and tasks.
 
+<img width="100%" alt="Animation" src="https://github.com/user-attachments/assets/65285216-ecd2-4fef-8662-51b05e16237c" />
+
 ## Technologies
 - ASP.NET Core MVC
 - Entity Framework Core
